@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+<robot name="wheeltec" xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <xacro:macro name="rplidar" params="LA">
+        <!-- define rplidar -->
+        <link name="${LA}_link">
+            <box_inertial_matrix  m="0.001" w="0.001" h="0.001" d="0.001"/>
+            <visual>
+                <origin xyz=" 0 0 0 " rpy="0 0 0" />
+                <geometry>
+                    <!--add rplidar mesh-->
+                    <mesh filename="package://wheeltec_description/meshes/mini_akm/rplidar_link.STL" />
+                </geometry>
+                <material name="black"/>
+            </visual>
+            <collision>
+                <origin xyz="0 0 0" rpy="0 0 0" />
+                <geometry>
+                    <!--add rplidar mesh-->
+                    <mesh filename="package://wheeltec_description/meshes/mini_akm/rplidar_link.STL" />
+                </geometry>
+            </collision>
+        </link>
+        <gazebo reference="${LA}_link">
+            <!--rplidar color in gazebo-->
+            <material>Gazebo/Black</material>
+            <!--define sensor-->
+            <sensor type="ray" name="rplidar">
+                <visualize>false</visualize>
+                <update_rate>40</update_rate>
+                <ray>
+                    <scan>
+                      <horizontal>
+                        <samples>720</samples>
+                        <resolution>1</resolution>
+                        <min_angle>${rplidar_min_angle*M_PI/180}</min_angle>
+                        <max_angle>${rplidar_max_angle*M_PI/180}</max_angle>
+                      </horizontal>
+                    </scan>
+                    <range>
+                      <min>0.10</min>
+                      <max>10.0</max>
+                      <resolution>0.01</resolution>
+                    </range>
+                    <!--Add gaussian noise-->
+                    <noise>
+                      <type>gaussian</type>
+                      <mean>0.0</mean>
+                      <stddev>0.0</stddev>
+                    </noise>
+                </ray>
+                <plugin name="gazebo_rplidar" filename="libgazebo_ros_laser.so">
+                    <topicName>/scan</topicName>
+                    <frameName>laser_link</frameName>
+                </plugin>
+            </sensor>
+        </gazebo>
+    </xacro:macro>    
+</robot>

@@ -1,0 +1,79 @@
+<launch>
+  <!-- select a robot model-->
+  <arg name="robot_model" default="water" doc="opt: water, wheeltec"/>
+  <!-- select a mode: how to drive persons: 0: data replay; 1: social force; 2: manually control with interface keyboard -->
+  <arg name="person_mode" default="2" doc="0, 1, 2"/>
+  <arg name="enable_gaze_control" default="true"/>
+  <!-- select a mode: how to drive the robot: 0: controlled by move_base, listen to the topic /cmd_vel; 1: social force; 2: manually control with interface keyboard -->
+  <arg name="robot_mode" default="0" doc="0, 1, 2"/>
+  <!-- whether to add a robot into the scenario-->
+  <arg name="with_robot" default="true"/>
+  <arg name="visualize" default="true"/>
+  <arg name="default_queue_size" default="10"/>
+  <arg name="enable_groups" default="true"/>
+  <arg name="pose_initial_x" default="-14.0"/>
+  <arg name="pose_initial_y" default="0.0"/>
+  <arg name="pose_initial_theta" default="0.0"/>
+  <arg name="max_robot_speed" default="1.0"/>
+  <arg name="simulation_factor" default="1"/>
+  <arg name="update_rate" default="25.0"/>
+  <arg name="spawn_period" default="5.0"/>
+
+  <!-- select a scene-->
+  <arg name="scene_file" default="$(find pedsim_simulator)scenes/example_env.xml"/>
+  <!-- <arg name="scene_file" default="$(find pedsim_simulator)scenes/test.xml"/> -->
+  <!-- <arg name="scene_file" default="$(find pedsim_simulator)scenes/test2.xml"/> -->
+
+  <!-- <arg name="scene_file" default="$(find pedsim_simulator)scenes/passing.xml"/> -->
+  <!-- <arg name="scene_file" default="$(find pedsim_simulator)scenes/deciding.xml"/> -->
+  <!-- <arg name="scene_file" default="$(find pedsim_simulator)scenes/avoiding_simple.xml"/> -->
+  <!-- <arg name="scene_file" default="$(find pedsim_simulator)scenes/avoiding.xml"/> -->
+  <!-- <arg name="scene_file" default="$(find pedsim_simulator)scenes/crossing.xml"/> -->
+
+  <!-- <arg name="scene_file" default="$(find pedsim_simulator)scenes/detouring.xml"/> -->
+  <!-- <arg name="scene_file" default="$(find pedsim_simulator)scenes/turning.xml"/> -->
+  
+  
+  
+  <!-- Simulator -->
+  <node name="pedsim_simulator" pkg="pedsim_simulator" type="pedsim_simulator" output="screen">
+    <param name="scene_file" value="$(arg scene_file)" type="string"/>
+    <param name="default_queue_size" value="$(arg default_queue_size)" type="int"/>
+    <param name="max_robot_speed" value="$(arg max_robot_speed)" type="double"/>
+    <param name="robot_mode" value="$(arg robot_mode)" type="int"/>
+    <param name="enable_groups" value="$(arg enable_groups)" type="bool"/>
+    <param name="simulation_factor" value="$(arg simulation_factor)" type="double"/>
+    <param name="update_rate" value="$(arg update_rate)" type="double"/>
+    <param name="spawn_period" value="$(arg spawn_period)" type="double"/>  
+    <param name="person_mode" value="$(arg person_mode)" type="int"/>
+    <param name="enable_gaze_control" value="$(arg enable_gaze_control)" type="bool"/>
+  </node>
+
+  <!-- Fake map_sever -->
+  <include file="$(find pedsim_map)/launch/pedsim_map.launch"/>
+
+  <!-- Robot controller -->
+  <group ns="pedbot/control" if="$(arg with_robot)">
+    <include file="$(find pedsim_simulator)/launch/robot_controller.launch">
+      <arg name="robot_mode" value="$(arg robot_mode)"/>
+      <arg name="robot_model" value="$(arg robot_model)" />
+      <arg name="pose_initial_x" value="$(arg pose_initial_x)"/>
+      <arg name="pose_initial_y" value="$(arg pose_initial_y)"/>
+      <arg name="pose_initial_theta" value="$(arg pose_initial_theta)"/>
+    </include>
+  </group>
+
+  <!-- Open interface_teleop if person_mode==2-->
+  <include if="$(eval person_mode == 2 or robot_mode == 2)" file="$(find pedsim_simulator)/launch/interface_teleop.launch"> <arg name="robot_model" value="$(arg robot_model)" />  </include>
+
+  <!-- Description for the robot -->>
+  <include if="$(eval robot_model == 'water')" file="$(find water_description)/launch/robot_description.launch"/>
+  <include if="$(eval robot_model == 'wheeltec')" file="$(find wheeltec_description)/launch/robot_description.launch"/>
+
+  <!-- Visualizer -->
+  <include file="$(find pedsim_visualizer)/launch/visualizer.launch"/>
+
+  <!-- Rviz -->
+  <node pkg="rviz" type="rviz" name="rviz" args="-d $(find pedsim_simulator)/rviz/hallwayROS.rviz" if="$(arg visualize)"/>
+
+</launch>

@@ -1,0 +1,7 @@
+<library path="lib/libtime_bounded_lattice">
+  <class name="time_bounded_lattice/TimeBoundedLatticeROS" type="time_bounded_lattice::TimeBoundedLatticeROS" base_class_type="nav_core::BaseLocalPlanner">
+    <description>
+      A implementation of time-bounded lattice.
+    </description>
+  </class>
+</library>

@@ -1,0 +1,19 @@
+# diff-drive Robot
+max_vel_x: 0.5 # [m/s]
+min_vel_x: -0.5 # [m/s]
+max_vel_x_backwards: 0.5 # [m/s]
+max_vel_y: 0.0 # [m/s]
+max_vel_theta: 1.2 # [rad/s]
+min_vel_theta: -1.2 # [rad/s]
+acc_lim_x: 0.5 # [m/s^2]
+acc_lim_theta: 1.0 # [rad/s^2]
+
+# for costmap_common_params
+robot_radius: 0.25 # [m]
+footprint_padding: 0.00
+min_turning_radius: 0.0 # diff-drive robot (can turn on place!)
+
+# for TEB
+footprint_model: # 这个model具有最高级，当设置为point时，即使后续给出了radius，该radus也会被忽略掉。 **当这里设置为point时，min_obstacle_dist必然要大于机器人半径
+  type: "point"
+min_obstacle_dist: 0.3 # This value must also include our robot radius, since footprint_model is set to "point".

@@ -1,0 +1,5 @@
+<!-- fake localization-->
+<launch>
+    <include file="$(find fake_localization)/launch/fake_localization.launch"/>
+    <include file="$(find move_base_bridge)/launch/move_base.launch"/>
+</launch>

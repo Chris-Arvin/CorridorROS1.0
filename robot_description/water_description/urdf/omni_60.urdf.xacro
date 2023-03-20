@@ -1,0 +1,98 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://wiki.ros.org/xacro">
+  <xacro:macro name="omni_60" params="parent name='omni_60' *origin">
+    <link name="${name}_base_link">
+      <visual>
+        <geometry>
+          <mesh filename="package://water_description/meshes/omni_60.stl" />
+        </geometry>
+        <origin xyz="0 0 0" rpy="${pi/2} 0 -${pi/2}" />
+        <material name="navy">
+          <color rgba="0.1 0.1 0.7 1" />
+        </material>
+      </visual>
+      <!-- For simplicity, treat the collision model as a cylinder -->
+      <collision>
+        <geometry>
+          <cylinder radius="0.05225" length="0.0535" />
+        </geometry>
+        <origin xyz="0 0 ${0.0535/2}" rpy="0 0 0" />
+      </collision>
+    </link>
+    <joint name="${name}_base_joint" type="fixed">
+      <parent link="${parent}" />
+      <child link="${name}_base_link" />
+      <xacro:insert_block name="origin" />
+    </joint>
+
+    <!--
+      The 5 cameras are arrayed radially, so define 2 links per camera: one in the middle with the correct yaw
+      and a second for the actual image frame.  This lets us basically use polar coordinates, instead of
+      caluclating XYZ transforms for each frame
+    -->
+    <!-- TODO double-check which way around the lenses are enumerated on an actual camera -->
+    <link name="${name}_camera1_link"/>
+    <link name="${name}_camera2_link"/>
+    <link name="${name}_camera3_link"/>
+    <link name="${name}_camera4_link"/>
+    <link name="${name}_camera5_link"/>
+
+    <link name="${name}_camera1_internal_link"/>
+    <link name="${name}_camera2_internal_link"/>
+    <link name="${name}_camera3_internal_link"/>
+    <link name="${name}_camera4_internal_link"/>
+    <link name="${name}_camera5_internal_link"/>
+
+    <joint name="${name}_camera3_orientation_joint" type="fixed">
+      <parent link="${name}_base_link" />
+      <child link="${name}_camera3_internal_link" />
+      <origin xyz="0 0 0.026" rpy="0 0 0" />
+    </joint>
+    <joint name="${name}_camera2_orientation_joint" type="fixed">
+      <parent link="${name}_camera3_internal_link" />
+      <child link="${name}_camera2_internal_link" />
+      <origin xyz="0 0 0" rpy="0 0 ${2*pi/5}" />
+    </joint>
+    <joint name="${name}_camera1_orientation_joint" type="fixed">
+      <parent link="${name}_camera3_internal_link" />
+      <child link="${name}_camera1_internal_link" />
+      <origin xyz="0 0 0" rpy="0 0 ${4*pi/5}" />
+    </joint>
+    <joint name="${name}_camera4_orientation_joint" type="fixed">
+      <parent link="${name}_camera3_internal_link" />
+      <child link="${name}_camera4_internal_link" />
+      <origin xyz="0 0 0" rpy="0 0 -${2*pi/5}" />
+    </joint>
+    <joint name="${name}_camera5_orientation_joint" type="fixed">
+      <parent link="${name}_camera3_internal_link" />
+      <child link="${name}_camera5_internal_link" />
+      <origin xyz="0 0 0" rpy="0 0 -${4*pi/5}" />
+    </joint>
+
+    <joint name="${name}_camera3_joint" type="fixed">
+      <parent link="${name}_camera3_internal_link" />
+      <child link="${name}_camera3_link" />
+      <origin xyz="0.05225 0 0" rpy="0 0 0" />
+    </joint>
+    <joint name="${name}_camera2_joint" type="fixed">
+      <parent link="${name}_camera2_internal_link" />
+      <child link="${name}_camera2_link" />
+      <origin xyz="0.05225 0 0" rpy="0 0 0" />
+    </joint>
+    <joint name="${name}_camera1_joint" type="fixed">
+      <parent link="${name}_camera1_internal_link" />
+      <child link="${name}_camera1_link" />
+      <origin xyz="0.05225 0 0" rpy="0 0 0" />
+    </joint>
+    <joint name="${name}_camera4_joint" type="fixed">
+      <parent link="${name}_camera4_internal_link" />
+      <child link="${name}_camera4_link" />
+      <origin xyz="0.05225 0 0" rpy="0 0 0" />
+    </joint>
+    <joint name="${name}_camera5_joint" type="fixed">
+      <parent link="${name}_camera5_internal_link" />
+      <child link="${name}_camera5_link" />
+      <origin xyz="0.05225 0 0" rpy="0 0 0" />
+    </joint>
+  </xacro:macro>
+</robot>

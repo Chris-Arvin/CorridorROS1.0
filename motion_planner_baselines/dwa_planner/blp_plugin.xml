@@ -1,0 +1,7 @@
+<library path="lib/libdwa_planner">
+  <class name="dwa_planner/DWAPlannerROS" type="dwa_planner::DWAPlannerROS" base_class_type="nav_core::BaseLocalPlanner">
+    <description>
+      A implementation of the dynamic window approach.
+    </description>
+  </class>
+</library>

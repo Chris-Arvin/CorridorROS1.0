@@ -1,0 +1,15 @@
+<launch>
+  <arg name="car_mode"  default="mini_akm" />
+  <!-- 调用xacro文件解析器 将对应车型的xacro文件转为urdf文件 -->
+  <arg name="model" default="$(find xacro)/xacro --inorder '$(find wheeltec_description)/urdf/$(arg car_mode)/$(arg car_mode).xacro'"/>
+  <param name="robot_description" command="$(arg model)" />
+
+  <!-- 运行robot_state_publisher节点，发布tf  -->
+  <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"  output="screen" >
+      <remap from="/joint_states" to="/wheeltec/joint_states"/> <!--重映射-->
+      <param name="publish_frequency" type="double" value="50.0" /> <!--发布频率-->
+  </node>
+  <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" >
+      <remap from="/joint_states" to="/wheeltec/joint_states"/>
+  </node> 
+</launch>

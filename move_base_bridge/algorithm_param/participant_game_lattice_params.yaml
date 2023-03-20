@@ -1,0 +1,11 @@
+ParticipantGameLatticeROS:
+  odom_topic: odom
+  xy_goal_tolerance: 0.2 # [m]
+  transform_tolerance: 0.5 # [s]
+  max_global_plan_lookahead_dist: 3 # [m]
+  
+  control_period: 0.2 # [s]
+
+  path_distance_bias: 32.0
+  goal_distance_bias: 24.0
+  occdist_scale: 0.01

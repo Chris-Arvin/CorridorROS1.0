@@ -1,0 +1,23 @@
+# car-like Robot
+max_vel_x: 0.5 #最大x前向速度
+min_vel_x: -0.5
+max_vel_y: 0.0 #最大y前向速度，非全向移动小车需要设置为0
+max_vel_x_backwards: 0.5 #最大后退速度
+max_vel_theta: 1.5  #最大转向角速度
+min_vel_theta: -1.5  #最大转向角速度
+acc_lim_x: 0.2  #最大x向加速度
+acc_lim_y: 0.0  #最大y向加速度，非全向移动小车需要设置为0
+acc_lim_theta: 0.3  #最大角加速度
+min_turning_radius: 0.350    #mini_akm    # Min turning radius of the carlike robot (compute value using a model or adjust with rqt_reconfigure manually)
+wheelbase: 0.144 #foe mini_akm
+
+
+# for costmap_common_params
+footprint: [[-0.101, -0.093], [-0.101, 0.093],[0.139,0.093],[0.139, -0.093]]  # 机器人形状，质心
+
+# for TEB
+footprint_model:
+  type: "polygon"   #多边形类型for akm
+  #阿克曼系列
+  vertices: [[-0.101, -0.093], [-0.101, 0.093],[0.139,0.093],[0.139, -0.093]] #机器人形状 for mini_akm
+min_obstacle_dist: 0.1 # 当车辆被设置为polygon时，这里可以被设置为0.0（实际上可以留一点裕度，保证安全）

@@ -1,0 +1,18 @@
+TimeBoundedLatticeROS:
+  odom_topic: odom
+  xy_goal_tolerance: 0.2 # [m]
+  transform_tolerance: 0.5 # [s]
+  max_global_plan_lookahead_dist: 1.5 # [m]
+
+  # Robot
+  max_vel_x: 0.55 # [m/s]
+  min_vel_x: 0.0 # [m/s]
+  max_vel_theta: 1.2 # [rad/s]
+  min_vel_theta: -1.2 # [rad/s]
+  acc_lim_x: 0.25 # [m/s^2]
+  acc_lim_theta: 1.2 # [rad/s^2]
+  control_period: 0.2 # [s]
+
+  path_distance_bias: 32.0
+  goal_distance_bias: 24.0
+  occdist_scale: 0.01

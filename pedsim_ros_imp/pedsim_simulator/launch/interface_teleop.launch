@@ -1,0 +1,8 @@
+<launch>
+  <arg name="robot_model" default="$(arg robot_model)" />
+  <node pkg="pedsim_simulator" name="pedsim_interface_teleop" type="interface_teleop_simple.py" output="screen">
+  <!-- <node pkg="pedsim_simulator" name="pedsim_interface_teleop" type="interface_teleop.py" output="screen"> -->
+    <rosparam if="$(eval robot_model == 'wheeltec')" file="$(find wheeltec_description)/param/robot_constrains.yaml" command="load" ns="teleop"/>
+    <rosparam if="$(eval robot_model == 'water')" file="$(find water_description)/param/robot_constrains.yaml" command="load" ns="teleop"/>
+  </node>
+</launch>

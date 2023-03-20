@@ -1,0 +1,27 @@
+map_type: costmap
+
+obstacle_layer:
+ enabled: true
+ obstacle_range: 3.0
+ raytrace_range: 3.5
+ inflation_radius: 0.25
+ track_unknown_space: false
+ combination_method: 1
+
+ observation_sources: scan
+ scan: {sensor_frame: base_scan, data_type: LaserScan, topic: scan, marking: true, clearing: true}
+
+inflation_layer:
+  enabled:              true
+  cost_scaling_factor:  10.0  # exponential rate at which the obstacle cost drops off (default: 10)
+  inflation_radius:     0.3  # max. distance from an obstacle at which costs are incurred for planning paths. *must >= robot_radius defined in the robot_constraints.yaml*
+
+fake_obstacle_layer:
+  enabled:              true
+  map_topic:            "/map_with_people"
+
+static_layer:
+  enabled:              true
+  map_topic:            "/map"
+
+

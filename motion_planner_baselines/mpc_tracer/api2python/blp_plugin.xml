@@ -1,0 +1,7 @@
+<library path="lib/libapi2python">
+  <class name="api2python/API2PythonROS" type="api2python::API2PythonROS" base_class_type="nav_core::BaseLocalPlanner">
+    <description>
+      An api to python planner.
+    </description>
+  </class>
+</library>

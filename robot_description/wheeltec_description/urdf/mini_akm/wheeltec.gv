@@ -1,0 +1,38 @@
+digraph G {
+node [shape=box];
+"base_footprint" [label="base_footprint"];
+"base_link" [label="base_link"];
+"camera_link" [label="camera_link"];
+"camera_frame_optical" [label="camera_frame_optical"];
+"imu_link" [label="imu_link"];
+"left_rear_wheel_link" [label="left_rear_wheel_link"];
+"left_front_axle_carrier" [label="left_front_axle_carrier"];
+"left_front_wheel_link" [label="left_front_wheel_link"];
+"right_rear_wheel_link" [label="right_rear_wheel_link"];
+"right_front_axle_carrier" [label="right_front_axle_carrier"];
+"right_front_wheel_link" [label="right_front_wheel_link"];
+"laser_link" [label="laser_link"];
+node [shape=ellipse, color=blue, fontcolor=blue];
+"base_footprint" -> "base_footprint_joint" [label="xyz: 0 0 0.025 \nrpy: 0 -0 0"]
+"base_footprint_joint" -> "base_link"
+"base_link" -> "camera_frame_joint" [label="xyz: 0.1402 0.00021887 0.093025 \nrpy: 0 -0 0"]
+"camera_frame_joint" -> "camera_link"
+"camera_link" -> "camera_optical_joint" [label="xyz: 0 0 0 \nrpy: -1.5708 -5.55112e-17 -1.5708"]
+"camera_optical_joint" -> "camera_frame_optical"
+"base_link" -> "imu_joint" [label="xyz: -0.03 0 0.06 \nrpy: 0 -0 0"]
+"imu_joint" -> "imu_link"
+"base_link" -> "left_rear_wheel_joint" [label="xyz: -0.069152 0.083 0.0165 \nrpy: 0 -0 0"]
+"left_rear_wheel_joint" -> "left_rear_wheel_link"
+"base_link" -> "left_steering_joint" [label="xyz: 0.074098 0.081003 0.013 \nrpy: 0 -0 0"]
+"left_steering_joint" -> "left_front_axle_carrier"
+"left_front_axle_carrier" -> "left_front_wheel_joint" [label="xyz: 0 0 0 \nrpy: 0 -0 0"]
+"left_front_wheel_joint" -> "left_front_wheel_link"
+"base_link" -> "right_rear_wheel_joint" [label="xyz: -0.069152 -0.083 0.0165 \nrpy: 0 -0 0"]
+"right_rear_wheel_joint" -> "right_rear_wheel_link"
+"base_link" -> "right_steering_joint" [label="xyz: 0.074098 -0.080997 0.013 \nrpy: 0 -0 0"]
+"right_steering_joint" -> "right_front_axle_carrier"
+"right_front_axle_carrier" -> "right_front_wheel_joint" [label="xyz: 0 0 0 \nrpy: 0 -0 0"]
+"right_front_wheel_joint" -> "right_front_wheel_link"
+"base_link" -> "rplidar_joint" [label="xyz: 0.051872 0.00011578 0.1306 \nrpy: 0 -0 0"]
+"rplidar_joint" -> "laser_link"
+}

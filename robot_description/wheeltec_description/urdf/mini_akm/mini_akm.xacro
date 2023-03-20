@@ -1,0 +1,168 @@
+<?xml version="1.0"?>
+<robot name="wheeltec" xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <!--M_PI-->
+    <xacro:property name="M_PI" value="3.1415926535897931" />
+    <!--rplidar description-->
+    <!--rplidar position-->
+    <xacro:property name="rplidar_position_x" value="0.051872" />
+    <xacro:property name="rplidar_position_y" value="0.00011578" />
+    <xacro:property name="rplidar_position_z" value="0.1306" />
+    <!--rplidar scanning angle-->
+    <xacro:property name="rplidar_min_angle" value="-180" /> 
+    <xacro:property name="rplidar_max_angle" value="180" /> 
+    <!--camera description-->
+    <!--camera position-->
+    <xacro:property name="camera_position_x" value="0.1402" />
+    <xacro:property name="camera_position_y" value="0.00021887" />
+    <xacro:property name="camera_position_z" value="0.093025" />
+    <!--robot_body description-->
+    <!--wheel position-->
+    <xacro:property name="rear_wheel_position_x" value="-0.069152" /> 
+    <xacro:property name="right_rear_wheel_position_y" value="-0.083" />
+    <xacro:property name="left_rear_wheel_position_y" value="0.083" />
+    <xacro:property name="rear_wheel_position_z" value="0.0165" />
+    <xacro:property name="left_front_wheel_position_x" value="0.074098" /> 
+    <xacro:property name="right_front_wheel_position_x" value="0.074098" /> 
+    <xacro:property name="left_front_wheel_position_y" value="0.081003" />
+    <xacro:property name="right_front_wheel_position_y" value="-0.080997" />
+    <xacro:property name="front_wheel_position_z" value="0.013" /> 
+    <xacro:property name="wheel_mass" value="0.0515533105453353"/>   
+    <!--chassis position--> 
+    <xacro:property name="box_position_x" value="0" />
+    <xacro:property name="box_position_y" value="0" />
+    <xacro:property name="box_position_z" value="0.025" />
+    <!--chassis inertia--> 
+    <xacro:property name="box_length" value="0.23" /> 
+    <xacro:property name="box_height" value="0.05" />
+    <xacro:property name="box_width" value="0.12" />
+    <xacro:property name="box_mass"   value="2.8" />
+    <!--wheel angle limit-->
+    <xacro:property name="wheel_travel" value="1.046562"/> <!--60 degree-->
+    <!--robot with rplidar,camera and imu -->
+    <xacro:include filename="$(find wheeltec_description)/urdf/mini_akm/miniakm_body.xacro" />
+    <xacro:include filename="$(find wheeltec_description)/urdf/mini_akm/miniakm_rplidar.xacro" />
+    <xacro:include filename="$(find wheeltec_description)/urdf/mini_akm/miniakm_camera.xacro" />
+    <xacro:include filename="$(find wheeltec_description)/urdf/imu.xacro" />
+    <xacro:include filename="$(find wheeltec_description)/urdf/material.xacro" />
+    <xacro:include filename="$(find wheeltec_description)/urdf/mini_akm/miniakm_transmission.xacro" />
+    <!-- define rplidar joint-->
+    <joint name="rplidar_joint" type="fixed">
+        <origin xyz="${rplidar_position_x} ${rplidar_position_y} ${rplidar_position_z}" rpy="0 0 0" />
+        <parent link="base_link"/>
+        <child link="laser_link"/>
+    </joint>    
+    <!-- define camera joint-->
+    <joint name="camera_frame_joint" type="fixed">
+        <origin xyz="${camera_position_x} ${camera_position_y} ${camera_position_z}" rpy="0 0 0" />
+        <parent link="base_link"/>
+        <child link="camera_link"/>
+    </joint>
+    <!--define rear_wheel_joint rotate around the y axis,Max velocity is 38.70 rad/s,Max effort 3.9 N m  -->
+    <xacro:macro name="rear_joint" params="LR *origin  ">
+    <joint name="${LR}_rear_wheel_joint" type="continuous">
+        <xacro:insert_block name="origin"/>
+        <parent link="base_link"/>
+        <child link="${LR}_rear_wheel_link"/>
+        <axis xyz="0 1 0" rpy="0 0 0"/>
+        <limit effort="3.9" velocity="38.70"/>
+    </joint>
+    </xacro:macro>
+    <xacro:macro name="front_joint" params="LR *origin ">
+    <!--define front axle carrier-->
+    <link name="${LR}_front_axle_carrier">
+        <inertial>
+          <mass value="0.01"/>
+          <inertia ixx="0.001" ixy="0" ixz="0" iyy="0.001" iyz="0" izz="0.001"/>
+        </inertial>
+    </link>
+    <!--define front_wheel_joint rotate around the y axis,Max velocity is 38.70 rad/s,Max effort 3.9 N m-->
+    <joint name="${LR}_front_wheel_joint" type="continuous">
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+        <parent link="${LR}_front_axle_carrier"/>
+        <child link="${LR}_front_wheel_link"/>
+        <axis xyz="0 1 0" rpy="0 0 0"/>
+        <limit effort="3.9" velocity="38.70" />
+    </joint>
+    <!--define steering_joint rotate around the z axis,Max velocity is 4.5 rad/s,Max effort 0.045 N m-->
+    <joint name="${LR}_steering_joint" type="revolute">
+      <xacro:insert_block name="origin"/>
+      <parent link="base_link"/>
+      <child link="${LR}_front_axle_carrier"/>
+      <axis xyz="0 0 1"/>
+      <!--upper 30 degree and lower -30 degree-->
+      <limit lower="${-wheel_travel/2}" upper="${wheel_travel/2}"
+             effort="0.045" velocity="4.5"/>
+    </joint>
+    </xacro:macro>
+    <!--define imu_joint fixed -->
+    <joint name="imu_joint" type="fixed">
+      <origin xyz="-0.03 0 0.06" rpy="0 0 0" />
+      <parent link="base_link"/>
+      <child link="imu_link"/>
+    </joint>
+    <!--macro call rplidar imu astra_camera-->
+    <rplidar LA="laser"/>
+    <imu prefix="imu"/>
+    <astra_camera prefix="camera"/>
+    <!--macro call wheel_link-->
+    <xacro:wheel_link LR="right" FR="rear">
+        <origin xyz="-3.98258093170512E-11 -0.00279452473049574 1.19940203602287E-11" rpy="0 0 0" />
+        <inertia
+          ixx="1.99603833653634E-05"
+          ixy="1.47023522649957E-14"
+          ixz="1.56178238251791E-10"
+          iyy="3.41116766443603E-05"
+          iyz="-1.59750652595274E-15"
+          izz="1.99606952584451E-05" />
+    </xacro:wheel_link>
+    <xacro:wheel_link LR="left" FR="rear">
+        <origin xyz="3.98258093170512E-11 0.00279452473049574 1.19940203602287E-11" rpy="0 0 0" />
+        <inertia
+          ixx="1.99603833653634E-05"
+          ixy="1.47023522649957E-14"
+          ixz="-1.56178238251791E-10"
+          iyy="3.41116766443603E-05"
+          iyz="1.59750652595274E-15"
+          izz="1.99606952584451E-05" />
+    </xacro:wheel_link>
+    <xacro:wheel_link LR="right" FR="front">
+        <origin xyz="1.50883194827145E-11 -0.00228176069832715 1.40150807625972E-11" rpy="0 0 0" />
+        <inertia
+          ixx="1.91351003010526E-05"
+          ixy="-4.51400783455223E-15"
+          ixz="-2.66123995114195E-10"
+          iyy="3.30131998434901E-05"
+          iyz="-4.48462029754282E-15"
+          izz="1.91374249680472E-05" />
+    </xacro:wheel_link>
+    <xacro:wheel_link LR="left" FR="front">
+        <origin xyz="1.50882639715633E-11 0.00228176069832718 -1.40150807625972E-11" rpy="0 0 0"  />
+        <inertia
+          ixx="1.91343292762451E-05"
+          ixy="4.51397364480803E-15"
+          ixz="9.52734291190626E-10"
+          iyy="3.30122388976539E-05"
+          iyz="-4.48462116122782E-15"
+          izz="1.91372350470185E-05" />
+    </xacro:wheel_link>
+    <!--macro call rear_joint-->
+    <xacro:rear_joint LR="right" >
+        <origin xyz="${rear_wheel_position_x} ${right_rear_wheel_position_y} ${rear_wheel_position_z}" rpy="0 0 0" />
+    </xacro:rear_joint>
+    <xacro:rear_joint LR="left" >
+        <origin xyz="${rear_wheel_position_x} ${left_rear_wheel_position_y} ${rear_wheel_position_z}" rpy="0 0 0" />
+    </xacro:rear_joint>
+    <xacro:front_joint LR="right" >
+        <origin xyz="${right_front_wheel_position_x} ${right_front_wheel_position_y} ${front_wheel_position_z}" rpy="0 0 0" />
+    </xacro:front_joint>
+    <xacro:front_joint LR="left" >
+        <origin xyz="${left_front_wheel_position_x} ${left_front_wheel_position_y} ${front_wheel_position_z}" rpy="0 0 0" />
+    </xacro:front_joint>   
+    <!--macro call transmission-->
+    <wheel_transmission LR="right" FR="rear"/>
+    <wheel_transmission LR="left" FR="rear"/>
+    <wheel_transmission LR="right" FR="front"/>
+    <wheel_transmission LR="left" FR="front"/>
+    <steering_transmission LR="right" />
+    <steering_transmission LR="left" />
+</robot>

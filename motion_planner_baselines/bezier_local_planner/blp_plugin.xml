@@ -1,0 +1,7 @@
+<library path="lib/libbezier_local_planner">
+  <class name="bezier_local_planner/BezierLocalPlannerROS" type="bezier_local_planner::BezierLocalPlannerROS" base_class_type="nav_core::BaseLocalPlanner">
+    <description>
+      A implementation of quintic Bezier curve-based local planner.
+    </description>
+  </class>
+</library>

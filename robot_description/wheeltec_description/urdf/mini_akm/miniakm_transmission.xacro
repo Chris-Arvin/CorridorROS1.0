@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<robot name="wheeltec" xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <!--define the base_link in Gazebo -->
+    <gazebo reference="base_link">
+        <material>Gazebo/Grey</material>
+    </gazebo>
+<!--Defining the LR wheel transmission in this robot-->
+    <xacro:macro name="wheel_transmission" params="LR FR">
+    <gazebo reference="${LR}_${FR}_wheel_link">
+        <material>Gazebo/Black</material>
+        <mu1>1</mu1>
+        <mu2>1</mu2>
+        <maxContacts>1</maxContacts>
+        <kp>100000.000000</kp>
+        <kd>1.000000</kd>
+        <maxVel>100.000000</maxVel>
+        <minDepth>0.000000</minDepth>
+        <dampingFactor>0.01</dampingFactor>
+    </gazebo>
+    <transmission name="${LR}_${FR}_wheel_joint_trans">
+        <type>transmission_interface/SimpleTransmission</type>
+        <joint name="${LR}_${FR}_wheel_joint">
+            <hardwareInterface>VelocityJointInterface</hardwareInterface>
+        </joint>
+        <actuator name="${LR}_${FR}_wheel_joint_motor">
+            <hardwareInterface>VelocityJointInterface</hardwareInterface>
+            <mechanicalReduction>1</mechanicalReduction>
+        </actuator>
+    </transmission>
+    </xacro:macro>
+    <xacro:macro name="steering_transmission" params="LR">
+    <transmission name="${LR}_steering_trans">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="${LR}_steering_joint">
+        <hardwareInterface>PositionJointInterface</hardwareInterface>
+      </joint>
+      <actuator name="${LR}_steering_act">
+        <hardwareInterface>PositionJointInterface</hardwareInterface>
+        <mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission>
+    </xacro:macro>
+<!-- Defining the control plugin used in this robot -->
+  <gazebo>
+    <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+      <robotNamespace>/wheeltec</robotNamespace>
+      <robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>
+    </plugin>
+  </gazebo>
+</robot>

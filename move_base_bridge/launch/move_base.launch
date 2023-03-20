@@ -1,0 +1,120 @@
+<launch>
+  <!-- Arguments -->
+  <arg name="robot_model" default="water" doc="opt: water, wheeltec"/>
+  <arg name="local_plan" default="TEB" doc="opt: TEB, DWA, Bezier, TBL, PGL, MPC"/>
+  
+  <!-- move_base, Timed elastic band -->
+  <node if="$(eval local_plan == 'TEB')" pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+    <param name="base_local_planner" value="teb_local_planner/TebLocalPlannerROS" />
+    <rosparam file="$(find move_base_bridge)/move_base_param/move_base_params.yaml" command="load" />
+    <rosparam file="$(find move_base_bridge)/algorithm_param/teb_local_planner_params.yaml" command="load" />
+
+    <rosparam file="$(find move_base_bridge)/costmap_param/static_local_costmap_params.yaml" command="load" />
+    <rosparam file="$(find move_base_bridge)/costmap_param/dynamic_global_costmap_params.yaml" command="load" />
+    <rosparam file="$(find move_base_bridge)/costmap_param/costmap_converter_params.yaml" command="load" /> 
+    <rosparam file="$(find move_base_bridge)/costmap_param/costmap_common_params.yaml" command="load" ns="global_costmap" />
+    <rosparam file="$(find move_base_bridge)/costmap_param/costmap_common_params.yaml" command="load" ns="local_costmap" />
+
+    <rosparam if="$(eval robot_model == 'wheeltec')" file="$(find wheeltec_description)/param/robot_constrains.yaml" command="load" ns="TebLocalPlannerROS"/>
+    <rosparam if="$(eval robot_model == 'wheeltec')" file="$(find wheeltec_description)/param/robot_constrains.yaml" command="load" ns="global_costmap"/>
+    <rosparam if="$(eval robot_model == 'wheeltec')" file="$(find wheeltec_description)/param/robot_constrains.yaml" command="load" ns="local_costmap"/>
+    <rosparam if="$(eval robot_model == 'water')" file="$(find water_description)/param/robot_constrains.yaml" command="load" ns="TebLocalPlannerROS"/>
+    <rosparam if="$(eval robot_model == 'water')" file="$(find water_description)/param/robot_constrains.yaml" command="load" ns="global_costmap"/>
+    <rosparam if="$(eval robot_model == 'water')" file="$(find water_description)/param/robot_constrains.yaml" command="load" ns="local_costmap"/>
+  </node>
+  <include if="$(eval local_plan == 'TEB')" file="$(find teb_local_planner)/launch/dynamic_obstacle_trans.launch"/>
+
+  <!-- move_base, Dynamic window approach -->
+  <node if="$(eval local_plan == 'DWA')" pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+    <param name="base_local_planner" value="dwa_planner/DWAPlannerROS" />
+    <rosparam file="$(find move_base_bridge)/move_base_param/move_base_params.yaml" command="load" />
+    <rosparam file="$(find move_base_bridge)/algorithm_param/dwa_planner_params.yaml" command="load" />
+
+    <rosparam file="$(find move_base_bridge)/costmap_param/dynamic_local_costmap_params.yaml" command="load" />
+    <rosparam file="$(find move_base_bridge)/costmap_param/dynamic_global_costmap_params.yaml" command="load" />
+    <rosparam file="$(find move_base_bridge)/costmap_param/costmap_common_params.yaml" command="load" ns="global_costmap" />
+    <rosparam file="$(find move_base_bridge)/costmap_param/costmap_common_params.yaml" command="load" ns="local_costmap" />
+
+    <rosparam if="$(eval robot_model == 'wheeltec')" file="$(find wheeltec_description)/param/robot_constrains.yaml" command="load" ns="DWAPlannerROS"/>
+    <rosparam if="$(eval robot_model == 'wheeltec')" file="$(find wheeltec_description)/param/robot_constrains.yaml" command="load" ns="global_costmap"/>
+    <rosparam if="$(eval robot_model == 'wheeltec')" file="$(find wheeltec_description)/param/robot_constrains.yaml" command="load" ns="local_costmap"/>
+    <rosparam if="$(eval robot_model == 'water')" file="$(find water_description)/param/robot_constrains.yaml" command="load" ns="DWAPlannerROS"/>
+    <rosparam if="$(eval robot_model == 'water')" file="$(find water_description)/param/robot_constrains.yaml" command="load" ns="global_costmap"/>
+    <rosparam if="$(eval robot_model == 'water')" file="$(find water_description)/param/robot_constrains.yaml" command="load" ns="local_costmap"/>
+  </node>
+
+  <!-- move_base, Bezier planner -->
+  <node if="$(eval local_plan == 'Bezier')" pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+    <param name="base_local_planner" value="bezier_local_planner/BezierLocalPlannerROS" />
+    <rosparam file="$(find move_base_bridge)/move_base_param/move_base_params.yaml" command="load" />
+    <rosparam file="$(find move_base_bridge)/algorithm_param/bezier_local_planner_params.yaml" command="load" />
+    
+    <rosparam file="$(find move_base_bridge)/costmap_param/dynamic_local_costmap_params.yaml" command="load" />
+    <rosparam file="$(find move_base_bridge)/costmap_param/dynamic_global_costmap_params.yaml" command="load" />
+    <rosparam file="$(find move_base_bridge)/costmap_param/costmap_common_params.yaml" command="load" ns="global_costmap" />
+    <rosparam file="$(find move_base_bridge)/costmap_param/costmap_common_params.yaml" command="load" ns="local_costmap" />
+    
+    <rosparam if="$(eval robot_model == 'wheeltec')" file="$(find wheeltec_description)/param/robot_constrains.yaml" command="load" ns="BezierLocalPlannerROS"/>
+    <rosparam if="$(eval robot_model == 'wheeltec')" file="$(find wheeltec_description)/param/robot_constrains.yaml" command="load" ns="global_costmap"/>
+    <rosparam if="$(eval robot_model == 'wheeltec')" file="$(find wheeltec_description)/param/robot_constrains.yaml" command="load" ns="local_costmap"/>
+    <rosparam if="$(eval robot_model == 'water')" file="$(find water_description)/param/robot_constrains.yaml" command="load" ns="BezierLocalPlannerROS"/>
+    <rosparam if="$(eval robot_model == 'water')" file="$(find water_description)/param/robot_constrains.yaml" command="load" ns="global_costmap"/>
+    <rosparam if="$(eval robot_model == 'water')" file="$(find water_description)/param/robot_constrains.yaml" command="load" ns="local_costmap"/>
+  </node>
+
+  <!-- move_base, Time bounded lattice -->
+  <node if="$(eval local_plan == 'TBL')" pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+    <param name="base_local_planner" value="time_bounded_lattice/TimeBoundedLatticeROS" />
+    <rosparam file="$(find move_base_bridge)/move_base_param/move_base_params.yaml" command="load" />
+    <rosparam file="$(find move_base_bridge)/algorithm_param/time_bounded_lattice_params.yaml" command="load" />
+
+    <rosparam file="$(find move_base_bridge)/costmap_param/static_local_costmap_params.yaml" command="load" />
+    <rosparam file="$(find move_base_bridge)/costmap_param/static_global_costmap_params.yaml" command="load" />
+    <rosparam file="$(find move_base_bridge)/costmap_param/costmap_common_params.yaml" command="load" ns="global_costmap" />
+    <rosparam file="$(find move_base_bridge)/costmap_param/costmap_common_params.yaml" command="load" ns="local_costmap" />
+
+    <rosparam if="$(eval robot_model == 'wheeltec')" file="$(find wheeltec_description)/param/robot_constrains.yaml" command="load" ns="TimeBoundedLatticeROS"/>
+    <rosparam if="$(eval robot_model == 'wheeltec')" file="$(find wheeltec_description)/param/robot_constrains.yaml" command="load" ns="global_costmap"/>
+    <rosparam if="$(eval robot_model == 'wheeltec')" file="$(find wheeltec_description)/param/robot_constrains.yaml" command="load" ns="local_costmap"/>
+    <rosparam if="$(eval robot_model == 'water')" file="$(find water_description)/param/robot_constrains.yaml" command="load" ns="TimeBoundedLatticeROS"/>
+    <rosparam if="$(eval robot_model == 'water')" file="$(find water_description)/param/robot_constrains.yaml" command="load" ns="global_costmap"/>
+    <rosparam if="$(eval robot_model == 'water')" file="$(find water_description)/param/robot_constrains.yaml" command="load" ns="local_costmap"/>
+  </node>
+
+  <!-- move_base, Participant game lattice -->
+  <node if="$(eval local_plan == 'PGL')" pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+    <param name="base_local_planner" value="participant_game_lattice/ParticipantGameLatticeROS" />
+    <rosparam file="$(find move_base_bridge)/move_base_param/move_base_params.yaml" command="load" />
+    <rosparam file="$(find move_base_bridge)/algorithm_param/participant_game_lattice_params.yaml" command="load" />
+
+    <rosparam file="$(find move_base_bridge)/costmap_param/static_local_costmap_params.yaml" command="load" />
+    <rosparam file="$(find move_base_bridge)/costmap_param/static_global_costmap_params.yaml" command="load" />
+    <rosparam file="$(find move_base_bridge)/costmap_param/costmap_common_params.yaml" command="load" ns="global_costmap" />
+    <rosparam file="$(find move_base_bridge)/costmap_param/costmap_common_params.yaml" command="load" ns="local_costmap" />
+
+    <rosparam if="$(eval robot_model == 'wheeltec')" file="$(find wheeltec_description)/param/robot_constrains.yaml" command="load" ns="ParticipantGameLatticeROS"/>
+    <rosparam if="$(eval robot_model == 'wheeltec')" file="$(find wheeltec_description)/param/robot_constrains.yaml" command="load" ns="global_costmap"/>
+    <rosparam if="$(eval robot_model == 'wheeltec')" file="$(find wheeltec_description)/param/robot_constrains.yaml" command="load" ns="local_costmap"/>
+    <rosparam if="$(eval robot_model == 'water')" file="$(find water_description)/param/robot_constrains.yaml" command="load" ns="ParticipantGameLatticeROS"/>
+    <rosparam if="$(eval robot_model == 'water')" file="$(find water_description)/param/robot_constrains.yaml" command="load" ns="global_costmap"/>
+    <rosparam if="$(eval robot_model == 'water')" file="$(find water_description)/param/robot_constrains.yaml" command="load" ns="local_costmap"/>
+  </node>
+
+  <!-- move_base, Model predictive control / python API -->
+  <node if="$(eval local_plan == 'MPC')" pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+    <param name="base_local_planner" value="api2python/API2PythonROS" />
+    <rosparam file="$(find move_base_bridge)/move_base_param/move_base_params.yaml" command="load" />
+    
+    <rosparam file="$(find move_base_bridge)/costmap_param/static_local_costmap_params.yaml" command="load" />
+    <rosparam file="$(find move_base_bridge)/costmap_param/static_global_costmap_params.yaml" command="load" />
+    <rosparam file="$(find move_base_bridge)/costmap_param/costmap_common_params.yaml" command="load" ns="global_costmap" />
+    <rosparam file="$(find move_base_bridge)/costmap_param/costmap_common_params.yaml" command="load" ns="local_costmap" />
+    
+    <rosparam if="$(eval robot_model == 'wheeltec')" file="$(find wheeltec_description)/param/robot_constrains.yaml" command="load" ns="global_costmap"/>
+    <rosparam if="$(eval robot_model == 'wheeltec')" file="$(find wheeltec_description)/param/robot_constrains.yaml" command="load" ns="local_costmap"/>
+    <rosparam if="$(eval robot_model == 'water')" file="$(find water_description)/param/robot_constrains.yaml" command="load" ns="global_costmap"/>
+    <rosparam if="$(eval robot_model == 'water')" file="$(find water_description)/param/robot_constrains.yaml" command="load" ns="local_costmap"/>
+  </node>
+    <!-- <param name="base_global_planner" value="voronoi_planner/VoronoiPlanner"/> -->
+
+</launch>

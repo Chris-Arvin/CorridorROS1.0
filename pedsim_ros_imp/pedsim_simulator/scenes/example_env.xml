@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scenario>
+    <!--Obstacles-->
+        <!-- borders of corridor, PLEASE DO NOT DELETE-->
+        <obstacle x1="-20" y1="-1.5" x2="20" y2="-1.5" type="line"/>
+        <obstacle x1="-20" y1="1.5" x2="20" y2="1.5" type="line"/>
+        <!-- obstacles in the corridor, three types: line, rectangle, circle-->
+        <obstacle x1="-1" y1="0" x2="1" y2="0" type="line"/>
+        <obstacle x="2" y="-0.3" xHalfLength="0.6" yHalfLength="0.1" type="rectangle"/>
+        <obstacle x="-2" y="0"  radius="0.3" type="circle"/>
+
+    <!--Potential targets of pedestrians-->
+        <waypoint id="p1" x="-14" y="0" r="2"/>
+        <waypoint id="p2" x="14" y="0" r="2"/>
+
+    <!--AgentClusters-->
+        <agent x="3.5" y="1.0" n="1" dx="0" dy="0" type="1">
+            <addwaypoint id="p1"/>
+        </agent>
+        <agent x="4" y="-0.3" n="1" dx="0" dy="0" type="1">
+            <addwaypoint id="p1"/>
+        </agent>
+
+        <agent x="-4" y="0" n="1" dx="0" dy="0" type="1">
+            <addwaypoint id="p2"/>
+        </agent>
+        <agent x="-6.5" y="0" n="1" dx="1" dy="1" type="1">
+            <addwaypoint id="p2"/>
+        </agent>
+
+    <!--Robot-->
+        <agent x="-14" y="0" n="1" dx="0" dy="0" type="2">
+            <addwaypoint id="p1"/>
+            <addwaypoint id="p2"/>
+        </agent>
+</scenario>

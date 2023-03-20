@@ -1,0 +1,7 @@
+<library path="lib/libparticipant_game_lattice">
+  <class name="participant_game_lattice/ParticipantGameLatticeROS" type="participant_game_lattice::ParticipantGameLatticeROS" base_class_type="nav_core::BaseLocalPlanner">
+    <description>
+      A implementation of participant game lattice.
+    </description>
+  </class>
+</library>

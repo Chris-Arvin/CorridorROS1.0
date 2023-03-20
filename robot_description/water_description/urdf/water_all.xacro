@@ -1,0 +1,511 @@
+<?xml version="1.0"?>
+<!-- This URDF was automatically created by SolidWorks to URDF Exporter! Originally created by Stephen Brawner (brawner@gmail.com) 
+     Commit Version: 1.6.0-1-g15f4949  Build Version: 1.6.7594.29634
+     For more information, please see http://wiki.ros.org/sw_urdf_exporter -->
+
+
+<robot name="water_all" xmlns:xacro="http://ros.org/wiki/xacro">
+  <xacro:property name="M_PI" value="3.1415926535897931" /> 
+  <link
+    name="base_link">
+        <!-- r=0.26 -->>
+    <inertial>
+      <origin
+        xyz="0.000104664511012093 0.0049105114230535 0.145650059711867"
+        rpy="0 0 0" />
+      <mass
+        value="3.71154442446242" />
+      <inertia
+        ixx="0.0465430882693072"
+        ixy="0"
+        ixz="0"
+        iyy="0.0625130465095892"
+        iyz="0"
+        izz="0.0934102121820444" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 -${M_PI/2}" />
+      <geometry>
+        <mesh
+          filename="package://water_description/meshes/base_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://water_description/meshes/base_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+
+ <joint name="base_link2_joint" type="fixed">
+    <parent link="base_link"/>
+    <child link="base_link2"/>
+    <origin xyz="0.0 0.0 0.0" rpy="0 0 -${M_PI/2}"/>
+    <axis xyz="0 0 1"/>
+  </joint>
+
+  <link name="base_link2">
+    <visual>
+      <geometry>
+        <cylinder length="0.0206" radius="0.00035"/>
+      </geometry>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.0206" radius="0.035"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+    </collision>
+    <inertial>
+      <mass value="0.01" />
+      <origin xyz="0 0 0" />
+      <inertia ixx="0.001" ixy="0.0" ixz="0.0"
+                iyy="0.001" iyz="0.0"
+                izz="0.001" />
+    </inertial>
+  </link>
+
+
+
+
+ <joint name="wheel_left_joint" type="continuous">
+    <parent link="base_link2"/>
+    <child link="wheel_left_link"/>
+    <origin xyz="${0.40/2} 0.0 -0.04" rpy="${-M_PI/2} 0 ${M_PI/2}"/>
+    <axis xyz="0 0 1"/>
+  </joint>
+
+  <link name="wheel_left_link">
+    <visual>
+      <material
+        name="">
+        <color
+          rgba="1.0 1.0 1.0 1" />
+      </material>   
+      <geometry>
+        <cylinder length="0.0206" radius="0.028"/>
+      </geometry>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.0206" radius="0.028"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+    </collision>
+    <inertial>
+      <mass value="0.01" />
+      <origin xyz="0 0 0" />
+      <inertia ixx="0.001" ixy="0.0" ixz="0.0"
+                iyy="0.001" iyz="0.0"
+                izz="0.001" />
+    </inertial>
+  </link>
+
+  <joint name="wheel_right_joint" type="continuous">
+    <parent link="base_link2"/>
+    <child link="wheel_right_link"/>
+    <origin xyz="-${0.40/2} 0.0 -0.04" rpy="${-M_PI/2} 0 ${M_PI/2}"/>
+    <axis xyz="0 0 1"/>
+  </joint>
+  <link name="wheel_right_link">
+    <visual>
+      <material
+        name="">
+        <color
+          rgba="1.0 1.0 1.0 1" />
+      </material>
+      <geometry>
+        <cylinder length="0.0206" radius="0.028"/>
+      </geometry>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder length="0.0206" radius="0.028"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+    </collision>
+    <inertial>
+      <mass value="0.01" />
+      <origin xyz="0 0 0" />
+      <inertia ixx="0.001" ixy="0.0" ixz="0.0"
+                iyy="0.001" iyz="0.0"
+                izz="0.001" />
+    </inertial>
+  </link>
+
+  <joint name="caster_front_joint" type="fixed">
+    <parent link="base_link2"/>
+    <child link="caster_front_link"/>
+    <origin xyz="0 0.15 -0.05" rpy="${-M_PI/2} 0 ${M_PI/2}"/>
+  </joint>
+  <link name="caster_front_link">
+    <collision>
+      <geometry>
+        <cylinder length="0.0176" radius="0.017"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+    </collision>
+    <inertial>
+      <mass value="0.01" />
+      <origin xyz="0 0 0" />
+      <inertia ixx="0.1" ixy="0.0" ixz="0.0"
+                iyy="0.1" iyz="0.0"
+                izz="0.1" />
+    </inertial>
+    <visual>
+      <material
+        name="">
+        <color
+          rgba="1.0 1.0 1.0 1" />
+      </material>   
+      <geometry>
+        <cylinder length="0.0176" radius="0.017"/>
+      </geometry>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+    </visual>
+  </link>
+
+  <joint name="caster_back_joint" type="fixed">
+    <parent link="base_link2"/>
+    <child link="caster_back_link"/>
+    <origin xyz="0.0 -0.15 -0.05" rpy="${-M_PI/2} 0 ${M_PI/2}"/>
+  </joint>
+  <link name="caster_back_link">
+    <collision>
+      <geometry>
+        <cylinder length="0.0176" radius="0.017"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+    </collision>
+    <inertial>
+      <mass value="0.01" />
+      <origin xyz="0 0 0" />
+      <inertia ixx="0.1" ixy="0.0" ixz="0.0"
+                iyy="0.1" iyz="0.0"
+                izz="0.1" />
+    </inertial>
+    <visual>
+      <material
+        name="">
+        <color
+          rgba="1.0 1.0 1.0 1" />
+      </material>   
+      <geometry>
+        <cylinder length="0.0176" radius="0.017"/>
+      </geometry>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+    </visual>
+  </link>
+
+  <link name="holder1">
+    <collision>
+      <geometry>
+        <cylinder length="0.8" radius="0.02"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+    </collision>
+    <inertial>
+      <mass value="0.01" />
+      <origin xyz="0 0 -0.3" />
+      <inertia ixx="0.001" ixy="0.0" ixz="0.0"
+                iyy="0.001" iyz="0.0"
+                izz="0.001" />
+    </inertial>
+    <visual>
+      <material
+        name="">
+        <color
+          rgba="1.0 1.0 1.0 1" />
+      </material>   
+      <geometry>
+        <cylinder length="0.8" radius="0.02"/>
+      </geometry>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+    </visual>
+  </link>
+
+  <link name="holder2">
+    <collision>
+      <geometry>
+        <cylinder length="0.8" radius="0.02"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+    </collision>
+    <inertial>
+      <mass value="0.01" />
+      <origin xyz="0 0 -0.3" />
+      <inertia ixx="0.001" ixy="0.0" ixz="0.0"
+                iyy="0.001" iyz="0.0"
+                izz="0.001" />
+    </inertial>
+    <visual>
+      <material
+        name="">
+        <color
+          rgba="1.0 1.0 1.0 1" />
+      </material>    
+      <geometry>
+        <cylinder length="0.8" radius="0.02"/>
+      </geometry>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+    </visual>
+  </link>
+
+  <link name="holder3">
+    <collision>
+      <geometry>
+        <cylinder length="0.8" radius="0.02"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+    </collision>
+    <inertial>
+      <mass value="0.01" />
+      <origin xyz="0 0 -0.3" />
+      <inertia ixx="0.001" ixy="0.0" ixz="0.0"
+                iyy="0.001" iyz="0.0"
+                izz="0.001" />
+    </inertial>
+    <visual>
+      <material
+        name="">
+        <color
+          rgba="1.0 1.0 1.0 1" />
+      </material>   
+      <geometry>
+        <cylinder length="0.8" radius="0.02"/>
+      </geometry>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+    </visual>
+  </link>
+
+  <joint name="holder1_joint" type="fixed">
+    <origin xyz="0.0 0.01 0.645" rpy="0 0 0"/>
+    <parent link="base_link2"/>
+    <child link="holder1"/>
+  </joint>
+  <joint name="holder2_joint" type="fixed">
+    <origin xyz="0.1175 0.2 0.645" rpy="0 0 0"/>
+    <parent link="base_link2"/>
+    <child link="holder2"/>
+  </joint>
+  <joint name="holder3_joint" type="fixed">
+    <origin xyz="-0.1175 0.2 0.645" rpy="0 0 0"/>
+    <parent link="base_link2"/>
+    <child link="holder3"/>
+  </joint>
+
+  <link name="pan1">
+    <collision>
+      <geometry>
+        <box size=".3 .25 .01"/>    
+      </geometry>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+    </collision>
+    <inertial>
+      <mass value="0.01" />
+      <origin xyz="0 0 0" />
+      <inertia ixx="0.001" ixy="0.0" ixz="0.0"
+                iyy="0.001" iyz="0.0"
+                izz="0.001" />
+    </inertial>
+    <visual>
+      <material
+        name="">
+        <color
+          rgba="1.0 1.0 1.0 1" />
+      </material>   
+      <geometry>
+        <box size=".3 .25 .01"/>          
+      </geometry>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+    </visual>
+  </link>
+  <link name="pan2">
+    <collision>
+      <geometry>
+        <box size=".3 .25 .01"/>         
+      </geometry>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+    </collision>
+    <inertial>
+      <mass value="0.01" />
+      <origin xyz="0 0 0" />
+      <inertia ixx="0.001" ixy="0.0" ixz="0.0"
+                iyy="0.001" iyz="0.0"
+                izz="0.001" />
+    </inertial>
+    <visual>
+      <material
+        name="">
+        <color
+          rgba="1.0 1.0 1.0 1" />
+      </material>
+      <geometry>
+        <box size=".3 .25 .01"/>      
+      </geometry>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+    </visual>
+  </link>
+  <joint name="pan1_joint" type="fixed">
+    <origin xyz="0 0.1 0.4" rpy="0 0 0"/>
+    <parent link="holder1"/>
+    <child link="pan1"/>
+  </joint>
+  <joint name="pan2_joint" type="fixed">
+    <origin xyz="0 0 -0.15" rpy="0 0 0"/>
+    <parent link="pan1"/>
+    <child link="pan2"/>
+  </joint>
+
+
+  <!-- Hokuyo Laser -->
+  <link name="hokuyo_link">
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.01 0.01 0.01"/>
+      </geometry>
+    </collision>
+
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <material
+        name="">
+        <color
+          rgba="0.75294 0.75294 0.75294 1" />
+      </material>
+      <geometry>
+        <box size="0.01 0.01 0.01"/>
+      </geometry>
+    </visual>
+
+    <inertial>
+      <mass value="1e-5" />
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <inertia ixx="1e-6" ixy="0" ixz="0" iyy="1e-6" iyz="0" izz="1e-6" />
+    </inertial>
+  </link>
+
+  <joint name="hokuyo_joint" type="fixed">
+    <axis xyz="0 1 0" />
+    <origin xyz="0 0 0.2" rpy="0 0 0"/>
+    <parent link="base_link2"/>
+    <child link="hokuyo_link"/>
+  </joint>
+
+  
+  <xacro:include filename="$(find water_description)/urdf/depthcam.xacro"/>
+  <xacro:realsense_d435 sensor_name="d435_low" parent_link="base_link2" rate="10">
+    <origin rpy="0 -0.2 ${M_PI/2} " xyz="0 0.25 0.16"/>
+  </xacro:realsense_d435>
+
+  <xacro:realsense_d435 sensor_name="d435_high" parent_link="pan2" rate="10">
+    <origin rpy="0 0 ${M_PI/2}" xyz="0 0.1 0.008"/>
+  </xacro:realsense_d435>
+
+  <xacro:include filename="$(find water_description)/urdf/VLP-16.xacro"/>
+  <xacro:VLP-16 parent="pan1" name="velodyne" topic="/velodyne_points">
+    <origin xyz="0 0 0.0" rpy="0 0 ${M_PI/2 + 33.0/180.0*M_PI}" />
+  </xacro:VLP-16>
+
+  <xacro:include filename="$(find water_description)/urdf/omni_60.urdf.xacro"/>
+  <xacro:omni_60 parent="pan1" name="omni_60">
+    <origin xyz="0 0 0.07" rpy="0 0 0" />
+  </xacro:omni_60>
+
+
+
+  <gazebo reference="wheel_left_link">
+    <mu1>0.8</mu1>
+    <mu2>0.8</mu2>
+    <material>Gazebo/FlatBlack</material>
+  </gazebo>
+
+  <gazebo reference="wheel_right_link">
+    <mu1>0.8</mu1>
+    <mu2>0.8</mu2>
+    <material>Gazebo/FlatBlack</material>
+  </gazebo>
+  
+  <gazebo reference="caster_front_link">
+    <mu1>0</mu1>
+    <mu2>0</mu2>
+    <material>Gazebo/FlatBlack</material>
+  </gazebo>
+
+  <gazebo reference="caster_back_link">
+    <mu1>0</mu1>
+    <mu2>0</mu2>
+    <material>Gazebo/FlatBlack</material>
+  </gazebo>
+
+  <gazebo>
+    <plugin name="differential_drive_controller" filename="libgazebo_ros_diff_drive.so">
+      <alwaysOn>true</alwaysOn>
+      <updateRate>20</updateRate>
+      <leftJoint>wheel_left_joint</leftJoint>
+      <rightJoint>wheel_right_joint</rightJoint>
+      <wheelSeparation>0.40</wheelSeparation>
+      <wheelDiameter>0.03</wheelDiameter>
+      <torque>300</torque>
+      <legacyMode>true</legacyMode>
+      <commandTopic>cmd_vel</commandTopic>
+      <odometryTopic>odom</odometryTopic>
+      <odometryFrame>odom</odometryFrame>
+      <robotBaseFrame>base_link</robotBaseFrame>
+    </plugin>
+  </gazebo>
+
+
+  <!-- hokuyo -->
+  <gazebo reference="hokuyo_link">
+    <!-- <sensor type="gpu_ray" name="head_hokuyo_sensor"> -->
+    <sensor type="ray" name="head_hokuyo_sensor">
+      <pose>0 0 0 0 0 0</pose>
+      <visualize>true</visualize>
+      <update_rate>40</update_rate>
+      <ray>
+        <scan>
+          <horizontal>
+            <samples>720</samples>
+            <resolution>1</resolution>
+            <min_angle>-3.14</min_angle>
+            <max_angle>3.14</max_angle>
+          </horizontal>
+        </scan>
+        <range>
+          <min>0.1</min>
+          <max>30.0</max>
+          <resolution>0.01</resolution>
+        </range>
+        <noise>
+          <type>gaussian</type>
+          <mean>0.0</mean>
+          <stddev>0.01</stddev>
+      </noise>
+      </ray>
+      <!-- <plugin name="gazebo_ros_head_hokuyo_controller" filename="libgazebo_ros_gpu_laser.so"> -->
+      <plugin name="gazebo_ros_head_hokuyo_controller" filename="libgazebo_ros_laser.so">
+        <topicName>/scan</topicName>
+        <frameName>base_link</frameName>
+      </plugin>
+    </sensor>
+  </gazebo>
+
+</robot>
+
+

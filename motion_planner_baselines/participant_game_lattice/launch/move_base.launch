@@ -1,0 +1,74 @@
+<!-- 
+  Simulate a differential drive robot with the dwa_planner in gazebo:
+  - gazebo
+  - map_server
+  - move_base
+  - static map
+  - fake localization
+  - rviz view
+ -->
+<launch>
+
+  <!--  ************** Global Parameters ***************  -->
+  <param name="/use_sim_time" value="true"/>
+  <arg name="gui" default="true"/>
+
+  <!-- Initial pose -->
+  <arg name="initial_pose_x" default="0.0"/>
+  <arg name="initial_pose_y" default="0.0"/>
+  <arg name="initial_pose_a" default="1.5708"/>
+
+  <!-- Filename -->
+  <arg name="map_filename" default="$(find dwa_planner)/map/shopping_mall/map.yaml" />
+  <arg name="world_filename" default="$(find dwa_planner)/gazebo_world/world/shopping_mall.world" />
+  <arg name="global_frame" value="map" />
+
+  <!--  ************** Navigation ***************  -->
+  <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+    <rosparam file="$(find move_base_benchmark)/params/costmap_common_params.yaml" command="load" ns="global_costmap" />
+    <rosparam file="$(find move_base_benchmark)/params/costmap_common_params.yaml" command="load" ns="local_costmap" />
+    <rosparam file="$(find move_base_benchmark)/params/global_costmap_params.yaml" command="load" />
+    <rosparam file="$(find move_base_benchmark)/params/local_costmap_params.yaml" command="load" />
+    <param name="global_costmap/global_frame" value="$(arg global_frame)" />
+    <param name="local_costmap/global_frame" value="$(arg global_frame)" />
+
+    <param name="base_global_planner" value="global_planner/GlobalPlanner" />
+    <param name="planner_frequency" value="1.0" />
+    <param name="planner_patience" value="5.0" />
+
+    <param name="base_local_planner" value="bezier_local_planner/BezierLocalPlannerROS" />
+    <rosparam file="$(find bezier_local_planner)/params/bezier_local_planner_params.yaml" command="load" />
+    <param name="controller_frequency" value="20.0" />
+    <param name="controller_patience" value="5.0" />
+
+    <remap from="cmd_vel" to="RosAria/cmd_vel"/>
+    <remap from="odom" to="RosAria/odom"/>
+  </node>
+
+  <!--  ****** Maps *****  -->
+  <node name="map_server" pkg="map_server" type="map_server" args="$(arg map_filename)" output="screen">
+    <param name="frame_id" value="$(arg global_frame)"/>
+  </node>
+
+  <!--  ****** Localization *****  -->
+  <node name="fake_localization" pkg="fake_localization" type="fake_localization" respawn="false" >
+    <param name="global_frame_id" value="$(arg global_frame)" />
+  </node>
+
+  <!--  ****** Start Gazebo and launch world model *****  -->
+  <include file="$(find dwa_planner)/gazebo_world/launch/world_launch.launch">
+    <arg name="world_name" value="$(arg world_filename)"/>
+    <arg name="gui" value="$(arg gui)" />
+  </include>
+
+  <!-- Spawn p3dx mobile robot -->
+  <include file="$(find p3dx_gazebo)/launch/spawn_p3dx.launch">
+    <arg name="initial_pose_x" value="$(arg initial_pose_x)" />
+    <arg name="initial_pose_y" value="$(arg initial_pose_y)" />
+    <arg name="initial_pose_a" value="$(arg initial_pose_a)" />
+  </include>
+
+  <!--  **************** Visualisation ****************  -->
+  <node name="rviz" pkg="rviz" type="rviz" args="-d $(find dwa_planner)/launch/rviz_navigation.rviz"/>
+
+</launch>

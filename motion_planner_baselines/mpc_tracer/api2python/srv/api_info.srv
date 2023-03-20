@@ -1,0 +1,6 @@
+geometry_msgs/PoseStamped robot_pose
+geometry_msgs/Twist robot_vel
+nav_msgs/Path reference_path
+nav_msgs/OccupancyGrid map      #地图
+---
+geometry_msgs/Twist cmd
